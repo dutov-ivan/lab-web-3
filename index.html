@@ -1,5 +1,6 @@
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Home</title>
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -61,7 +62,10 @@
     </main>
     <nav>
       <img id="overlay" src="img/common/persistence.png" alt="clock overlay" />
-      <ul>
+      <div class="hamburger" id="hamburger-button">
+        <span></span><span></span><span></span>
+      </div>
+      <ul id="primary-nav">
         <li id="active-page">
           <a href="index.html">
             <h2>Home</h2>
@@ -123,5 +127,69 @@
         ><h2>Explore more!</h2></a
       >
     </footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const nav = document.querySelector("nav");
+        const btn = document.getElementById("hamburger-button");
+        const menu = document.getElementById("primary-nav");
+        if (!nav || !btn || !menu) return;
+
+        const setExpanded = (open) => {
+          btn.setAttribute("aria-expanded", String(open));
+          btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+        };
+
+        const toggleMenu = () => {
+          const isOpen = nav.classList.toggle("menu-open");
+          setExpanded(isOpen);
+        };
+
+        // A11y attributes
+        btn.setAttribute("role", "button");
+        btn.setAttribute("tabindex", "0");
+        btn.setAttribute("aria-controls", "primary-nav");
+        setExpanded(false);
+
+        // Toggle on click/keyboard
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          toggleMenu();
+        });
+        btn.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            toggleMenu();
+          }
+        });
+
+        // Close on outside click
+        document.addEventListener("click", (e) => {
+          if (!nav.classList.contains("menu-open")) return;
+          if (!nav.contains(e.target)) {
+            nav.classList.remove("menu-open");
+            setExpanded(false);
+          }
+        });
+
+        // Close on Escape
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && nav.classList.contains("menu-open")) {
+            nav.classList.remove("menu-open");
+            setExpanded(false);
+            btn.focus();
+          }
+        });
+
+        // Close after selecting a link
+        menu.addEventListener("click", (e) => {
+          const anchor =
+            e.target && (e.target.closest ? e.target.closest("a") : null);
+          if (anchor) {
+            nav.classList.remove("menu-open");
+            setExpanded(false);
+          }
+        });
+      });
+    </script>
   </body>
 </html>

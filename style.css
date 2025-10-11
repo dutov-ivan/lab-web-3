@@ -20,6 +20,7 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: inherit;
 }
 
 html {
@@ -43,7 +44,7 @@ a {
 }
 
 h1 {
-  font-size: 48px;
+  font-size: 40px;
   font-weight: 700;
 }
 
@@ -67,6 +68,10 @@ div > div {
   padding: 8px;
 }
 
+.hamburger {
+  display: none;
+}
+
 /* =============================
    LAYOUT: GRID AREAS
    ============================= */
@@ -76,6 +81,14 @@ body {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: auto auto auto auto auto auto;
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(
+    180deg,
+    var(--sky-blue) 0%,
+    var(--main-beige) 27.4%
+  );
+  color: black;
+  font-size: 14px;
 }
 
 /* =============================
@@ -112,10 +125,13 @@ header {
 main {
   grid-column: 1 / -2;
   grid-row: 2 / -2;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  grid-template-rows: auto;
 }
 
 #additional {
+  grid-column: 1 / 2;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -128,6 +144,7 @@ main {
 }
 
 #main-display {
+  grid-column: 2 / -2;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
@@ -178,7 +195,6 @@ nav a {
   top: -480px;
   right: -200px;
   width: 553px;
-  height: 910px;
   transform: rotate(-64.151deg);
   aspect-ratio: 48/79;
   filter: blur(4px);
@@ -186,11 +202,11 @@ nav a {
 
 nav li {
   z-index: 10;
+  transition: transform 0.3s ease;
 }
 
 nav li:hover {
   transform: scale(1.2);
-  transition: 0.3s;
 }
 
 /* =============================
@@ -219,11 +235,11 @@ footer {
 
 footer .social-icon:hover {
   transform: scale(1.2);
-  transition: 0.3s;
 }
 
 footer .social-icon {
   filter: invert(1);
+  transition: transform 0.3s ease;
 }
 
 #explore-more {
@@ -257,4 +273,235 @@ footer .social-icon {
 #read-more {
   display: block;
   font-weight: 700;
+}
+
+/* =============================
+   MEDIA QUERIES
+   ============================= */
+
+@media (max-width: 992px) {
+  #overlay {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+  .hamburger span {
+    display: block;
+    width: 30px;
+    height: 4px;
+    background-color: var(--deep-blue);
+    border-radius: 2px;
+  }
+
+  body {
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: auto auto auto auto;
+  }
+
+  header {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    padding: 16px 24px;
+  }
+
+  nav {
+    grid-column: 2 / -1;
+    grid-row: 1 / 2;
+    position: relative;
+  }
+  nav #primary-nav {
+    position: absolute;
+    top: 100%;
+    right: 16px;
+    left: auto;
+    width: min(320px, calc(100% - 32px));
+    margin-top: 8px;
+    padding: 16px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    list-style: none;
+    display: none;
+    z-index: 1000;
+    padding-top: 16px;
+    gap: 16px;
+  }
+  nav.menu-open #primary-nav {
+    display: flex;
+    flex-direction: column;
+  }
+  nav #primary-nav li {
+    transform: none;
+  }
+  nav #primary-nav li:hover {
+    transform: translateX(4px);
+    transition: 0.2s ease;
+  }
+  #hamburger-button {
+    margin-left: auto;
+  }
+  main {
+    grid-column: 1 / -1;
+    grid-row: 2 / -2;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+  }
+
+  #additional {
+    grid-column: 1 / 2;
+  }
+
+  #main-display {
+    grid-column: 2 / -1;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  header .quote {
+    display: none;
+  }
+
+  main {
+    grid-template-columns: 1fr;
+  }
+  #main-display {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+  #additional {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-height: auto;
+    padding-top: 32px;
+  }
+}
+
+@media (max-width: 576px) {
+  footer {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    row-gap: 8px;
+  }
+  #footer-content {
+    grid-row: 1;
+    justify-self: start;
+  }
+  #explore-more {
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  #main-content {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  #company-heading {
+    gap: 8px;
+    padding: 8px;
+  }
+  #company-heading img {
+    width: 64px;
+    height: 64px;
+  }
+  header h1 {
+    font-size: 28px;
+  }
+}
+
+/* =============================
+   HAMBURGER SLIDE-OUT WIDTH RULES
+   ============================= */
+@media (min-width: 576px) and (max-width: 992px) {
+  nav #primary-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100dvh;
+    width: 33.333vw; /* one-third of screen */
+    max-width: none;
+    margin: 0;
+    padding: 24px 16px;
+    background: #fff;
+    border-radius: 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    display: flex; /* ensure visible for transform animation */
+    flex-direction: column;
+    gap: 16px;
+    list-style: none;
+    z-index: 2000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    visibility: hidden; /* hidden when closed */
+    pointer-events: none; /* don't block clicks when closed */
+  }
+  nav.menu-open #primary-nav {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  nav #primary-nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100dvh;
+    width: 50vw;
+    max-width: none;
+    margin: 0;
+    padding: 24px 16px;
+    background: #fff;
+    border-radius: 0;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    list-style: none;
+    z-index: 2000;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  nav.menu-open #primary-nav {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  nav #primary-nav li {
+    text-align: center;
+  }
+}
+
+/* =============================
+   ACCESSIBILITY & MOTION
+   ============================= */
+nav a:focus-visible,
+footer a:focus-visible,
+.hamburger:focus-visible,
+#hamburger-button:focus-visible {
+  outline: 2px solid var(--deep-blue);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
