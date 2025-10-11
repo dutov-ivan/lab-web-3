@@ -72,6 +72,18 @@ div > div {
   display: none;
 }
 
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+  border: 0;
+  padding: 0;
+  margin: -1px;
+}
+
 /* =============================
    LAYOUT: GRID AREAS
    ============================= */
@@ -297,6 +309,13 @@ footer .social-icon {
     height: 4px;
     background-color: var(--deep-blue);
     border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+  }
+
+  /* make label behave like a button when focused */
+  .hamburger:focus-visible {
+    outline: 2px solid var(--deep-blue);
+    outline-offset: 2px;
   }
 
   body {
@@ -332,7 +351,8 @@ footer .social-icon {
     padding-top: 16px;
     gap: 16px;
   }
-  nav.menu-open #primary-nav {
+  /* Show primary nav when checkbox is checked (CSS-only) */
+  #menu-toggle:checked ~ #primary-nav {
     display: flex;
     flex-direction: column;
   }
@@ -418,8 +438,21 @@ footer .social-icon {
   header h1 {
     font-size: 28px;
   }
-}
 
+  /* Show overlay on very small screens when menu is open */
+  #menu-toggle:checked ~ .menu-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 1500;
+    cursor: pointer;
+  }
+  /* ensure primary nav stacks above overlay */
+  #menu-toggle:checked ~ #primary-nav {
+    z-index: 2000;
+  }
+}
 /* =============================
    HAMBURGER SLIDE-OUT WIDTH RULES
    ============================= */
@@ -446,10 +479,47 @@ footer .social-icon {
     visibility: hidden; /* hidden when closed */
     pointer-events: none; /* don't block clicks when closed */
   }
-  nav.menu-open #primary-nav {
+  /* Slide-in menu when checkbox is checked */
+  #menu-toggle:checked ~ #primary-nav {
     transform: translateX(0);
     visibility: visible;
     pointer-events: auto;
+  }
+
+  #menu-toggle:checked + .hamburger span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  #menu-toggle:checked + .hamburger span:nth-child(2) {
+    opacity: 0;
+  }
+  #menu-toggle:checked + .hamburger span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  #menu-toggle:checked ~ #primary-nav {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    display: flex !important;
+  }
+
+  .menu-overlay {
+    display: none;
+  }
+
+  @media (max-width: 992px) {
+    #menu-toggle:checked ~ .menu-overlay {
+      display: block;
+      position: fixed;
+      inset: 0; /* cover whole viewport */
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 1500; /* behind the nav (nav has 2000) but above page content */
+      cursor: pointer;
+    }
+    /* Ensure the menu (primary-nav) is above the overlay */
+    #menu-toggle:checked ~ #primary-nav {
+      z-index: 2000;
+    }
   }
 }
 
@@ -476,7 +546,8 @@ footer .social-icon {
     visibility: hidden;
     pointer-events: none;
   }
-  nav.menu-open #primary-nav {
+  /* Small-screen slide-in using checkbox state */
+  #menu-toggle:checked ~ #primary-nav {
     transform: translateX(0);
     visibility: visible;
     pointer-events: auto;
