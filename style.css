@@ -1,0 +1,260 @@
+/* =============================
+   FONTS
+   ============================= */
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
+
+/* =============================
+   THEME VARIABLES
+   ============================= */
+:root {
+  --deep-blue: #1b3a7a;
+  --sky-blue: #3778ff;
+  --main-beige: #f2e1c1;
+  --rose: #ffbebe;
+  --light-beige: #f9f3e6;
+}
+
+/* =============================
+   RESET + BASE ELEMENTS
+   ============================= */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(
+    180deg,
+    var(--sky-blue) 0%,
+    var(--main-beige) 27.4%
+  );
+  color: black;
+  font-size: 14px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+h2 {
+  line-height: 1;
+  font-size: 24px;
+}
+
+.quote {
+  font-family: "Playfair Display", serif;
+  font-size: 24px;
+  font-weight: 700;
+  font-style: italic;
+}
+
+nav,
+header,
+footer,
+main > div,
+div > div {
+  padding: 8px;
+}
+
+/* =============================
+   LAYOUT: GRID AREAS
+   ============================= */
+body {
+  overflow-x: hidden;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto auto auto auto auto auto;
+}
+
+/* =============================
+   HEADER
+   ============================= */
+header {
+  grid-column: 1 / -2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 96px 16px 96px;
+}
+
+#company-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+}
+
+#company-heading img {
+  height: 100px;
+  width: 100px;
+}
+
+#company-heading .quote {
+  font-size: 32px;
+  max-width: 256px;
+}
+
+/* =============================
+   MAIN AREA
+   ============================= */
+main {
+  grid-column: 1 / -2;
+  grid-row: 2 / -2;
+  display: flex;
+}
+
+#additional {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  flex: 0 0 25%;
+  background-color: var(--light-beige);
+  border-radius: 16px;
+  align-self: flex-start;
+  min-height: 100%;
+}
+
+#main-display {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 100%;
+  background-color: var(--deep-blue);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+}
+
+#description {
+  display: flex;
+  align-items: center;
+  color: var(--rose);
+}
+
+/* =============================
+   NAVIGATION
+   ============================= */
+nav {
+  grid-row: 1 / -2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 16px;
+}
+
+nav ul {
+  padding-top: 33%;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--deep-blue);
+}
+
+#active-page {
+  text-decoration: underline;
+  color: var(--deep-blue);
+}
+
+#overlay {
+  position: absolute;
+  top: -480px;
+  right: -200px;
+  width: 553px;
+  height: 910px;
+  transform: rotate(-64.151deg);
+  aspect-ratio: 48/79;
+  filter: blur(4px);
+}
+
+nav li {
+  z-index: 10;
+}
+
+nav li:hover {
+  transform: scale(1.2);
+  transition: 0.3s;
+}
+
+/* =============================
+   FOOTER
+   ============================= */
+footer {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  background-color: var(--deep-blue);
+  padding: 16px;
+}
+
+#footer-content {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.social-icon {
+  width: 48px;
+  height: 48px;
+}
+
+footer .social-icon:hover {
+  transform: scale(1.2);
+  transition: 0.3s;
+}
+
+footer .social-icon {
+  filter: invert(1);
+}
+
+#explore-more {
+  font-style: italic;
+  text-decoration: underline;
+  color: white;
+}
+
+#main-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+#main-content > div {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+#main-content > div img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  max-width: 100%;
+}
+
+#read-more {
+  display: block;
+  font-weight: 700;
+}
