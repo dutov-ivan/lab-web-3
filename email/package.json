@@ -1,0 +1,15 @@
+{
+  "name": "email",
+  "version": "1.0.0",
+  "description": "",
+  "main": "inline-images.js",
+  "scripts": {
+    "inline": "node inline-images.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@css-inline/css-inline": "^0.17.0"
+  }
+}
