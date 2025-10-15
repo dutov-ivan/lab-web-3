@@ -38,13 +38,31 @@ const resolveLocal = (baseDir, targetPath) => {
 const fileToDataUri = (absPath) => {
   if (!fs.existsSync(absPath)) return null;
   const ext = path.extname(absPath).slice(1).toLowerCase();
+  // For SVGs, return a utf-8 text data URI (URI-encoded) instead of base64 — better readability and often smaller.
+  if (ext === "svg") {
+    try {
+      const txt = fs.readFileSync(absPath, "utf8");
+      // Remove BOM if present
+      const clean = txt.replace(/^\uFEFF/, "");
+      // encodeURIComponent to ensure special chars are safe in the data URI
+      const encoded = encodeURIComponent(clean)
+        // preserve common SVG-safe characters for slightly smaller URI
+        .replace(/'/g, "%27")
+        .replace(/\(/g, "%28")
+        .replace(/\)/g, "%29");
+      return `data:image/svg+xml;utf8,${encoded}`;
+    } catch (err) {
+      // fall back to null so the caller can warn
+      return null;
+    }
+  }
+
   const mime =
     {
       png: "image/png",
       jpg: "image/jpeg",
       jpeg: "image/jpeg",
       gif: "image/gif",
-      svg: "image/svg+xml",
       webp: "image/webp",
       ico: "image/x-icon",
     }[ext] || "application/octet-stream";
@@ -73,22 +91,6 @@ html = html.replace(
     }
     // Preserve other attributes and replace src only
     return `<img${before}src="${uri}"${after}>`;
-  }
-);
-
-// 2) inline url(...) occurrences in the HTML (covers inline <style> blocks and style="..." attributes)
-//    This is best-effort. It inlines local paths and leaves remote/data ones alone.
-html = html.replace(
-  /url\(\s*(['"])?([^'")]+)\1\s*\)/gi,
-  (full, _q, urlPath) => {
-    if (/^data:/i.test(urlPath) || /^https?:\/\//i.test(urlPath)) return full;
-    const abs = resolveLocal(baseDir, urlPath);
-    const uri = fileToDataUri(abs);
-    if (!uri) {
-      console.warn(`⚠ Resource not found for url(): ${urlPath}`);
-      return full;
-    }
-    return `url("${uri}")`;
   }
 );
 
