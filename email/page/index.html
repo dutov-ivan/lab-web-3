@@ -221,31 +221,6 @@
     margin: 0 auto; /* centers the stacked column */
   }
 
-  /* At wider viewports, show two columns side-by-side using table/table-cell so cells match height. */
-  @media only screen and (min-width: 520px) {
-    #main-content {
-      display: table;
-      table-layout: fixed;
-      width: 100%;
-    }
-    #main-content > div {
-      display: table-cell;
-      width: 50%;
-      box-sizing: border-box;
-      padding: 8px;
-      vertical-align: top;
-    }
-    /* Make images fill the table-cell height so both match the tallest image. */
-    #main-content > div img {
-      display: block;
-      height: 100%;
-      width: auto;
-      max-width: none;
-      margin: 0 auto;
-      object-fit: contain;
-    }
-  }
-
   #main-content::after {
     content: "";
     display: table;
