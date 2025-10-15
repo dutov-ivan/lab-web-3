@@ -5,17 +5,6 @@
   @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 
   /* =============================
-   THEME VARIABLES
-   ============================= */
-  :root {
-    --deep-blue: #1b3a7a;
-    --sky-blue: #3778ff;
-    --main-beige: #f2e1c1;
-    --rose: #ffbebe;
-    --light-beige: #f9f3e6;
-  }
-
-  /* =============================
    RESET + BASE ELEMENTS
    ============================= */
   * {
@@ -27,16 +16,19 @@
     border-collapse: collapse;
   }
 
+  /* Base responsive typography: uses clamp() so sizes adapt without media queries */
   #body {
     overflow-x: hidden;
     font-family: "Inter", sans-serif;
     background: linear-gradient(
       180deg,
-      var(--sky-blue) 0%,
-      var(--main-beige) 27.4%
+      #3778ff 0%,
+      #f2e1c1 27.4%
     );
     color: black;
-    font-size: 14px;
+    /* base font scales between 13px and 18px with viewport influence */
+    font-size: clamp(13px, 1.2vw + 12px, 18px);
+    line-height: 1.4;
   }
 
   #body > table {
@@ -53,20 +45,23 @@
   }
 
   h1 {
-    font-size: 48px;
+    font-size: clamp(28px, 4vw + 8px, 56px);
     font-weight: 700;
+    line-height: 1.05;
   }
 
   h2 {
     line-height: 1;
-    font-size: 24px;
+    font-size: clamp(16px, 2.2vw + 6px, 28px);
   }
 
   .quote {
     font-family: "Playfair Display", serif;
-    font-size: 24px;
+    /* quotes are larger but adaptive */
+    font-size: clamp(18px, 2.5vw + 8px, 34px);
     font-weight: 700;
     font-style: italic;
+    line-height: 1.05;
   }
 
   #nav,
@@ -90,12 +85,16 @@
    ============================= */
 
   #company-heading {
-    padding: 24px 0 16px 96px;
+    padding: 24px 0 16px clamp(16px, 6vw, 96px);
   }
 
   #company-heading img {
-    height: 100px;
+    /* Email-safe: default to 100px but allow shrinking via max-width for narrow containers.
+       This avoids some Thunderbird/Gecko behaviour that can scale images up. */
     width: 100px;
+    max-width: 100%;
+    height: auto;
+    display: block;
   }
 
   .heading-right-padding {
@@ -107,7 +106,7 @@
    ============================= */
 
   #additional {
-    background-color: var(--light-beige);
+    background-color: #f9f3e6;
     border-radius: 16px;
   }
 
@@ -117,11 +116,11 @@
     padding-bottom: 16px;
   }
   .main-part {
-    background-color: var(--deep-blue);
+    background-color: #1b3a7a;
   }
 
   #description {
-    color: var(--rose);
+    color: #ffbebe;
     padding: 8px 0 8px 16px;
   }
 
@@ -139,29 +138,18 @@
 
   #nav ul li {
     margin-bottom: 2rem;
-    padding-left: 55%;
-  }
+    text-align: right;}
 
   #nav a {
     text-decoration: none;
-    color: var(--deep-blue);
+    color: #1b3a7a;
   }
 
   #active-page {
     text-decoration: underline;
-    color: var(--deep-blue);
+    color: #1b3a7a;
   }
 
-  #overlay {
-    position: absolute;
-    top: -480px;
-    right: -200px;
-    width: 553px;
-    height: 910px;
-    transform: rotate(-64.151deg);
-    aspect-ratio: 48/79;
-    filter: blur(4px);
-  }
 
   #nav li {
     z-index: 10;
@@ -177,7 +165,7 @@
    ============================= */
   .footer {
     color: white;
-    background-color: var(--deep-blue);
+    background-color: #1b3a7a;
     padding: 16px;
     vertical-align: middle;
   }
@@ -202,7 +190,6 @@
   .social-icon {
     width: 48px;
     height: 48px;
-    filter: invert(1);
   }
 
   .social-icon:hover {
@@ -219,27 +206,62 @@
 
   #main-content {
     width: 100%;
-    min-width: 220px;
-    overflow: hidden;
+    /* allow main content to shrink so sidebars remain visible on very small viewports */
+    min-width: 0;
     margin: 0 auto;
     text-align: center;
     border: none;
-    display: table;
-    table-layout: fixed;
   }
-  #main-content > div,
-  #main-content > td {
-    display: table-cell;
-    vertical-align: top;
-    padding: 8px;
-  }
-  #main-content img {
+  /* Mobile-first: stacked and centered by default (email-safe). At larger widths switch to two inline-block columns. */
+  #main-content > div {
     display: block;
     width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    margin: 0 auto; /* centers the stacked column */
+  }
+
+  /* At wider viewports, show two columns side-by-side using table/table-cell so cells match height. */
+  @media only screen and (min-width: 520px) {
+    #main-content {
+      display: table;
+      table-layout: fixed;
+      width: 100%;
+    }
+    #main-content > div {
+      display: table-cell;
+      width: 50%;
+      box-sizing: border-box;
+      padding: 8px;
+      vertical-align: top;
+    }
+    /* Make images fill the table-cell height so both match the tallest image. */
+    #main-content > div img {
+      display: block;
+      height: 100%;
+      width: auto;
+      max-width: none;
+      margin: 0 auto;
+      object-fit: contain;
+    }
+  }
+
+  #main-content::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  #main-content img {
+    display: block;
+    /* allow images to scale down to fit available space; don't forcibly expand them beyond natural size */
+    width: auto;
+    max-width: 100%;
     height: auto;
     object-fit: contain;
-    max-width: 100%;
     margin: 0 auto;
+    /* keep a reasonable max-height but allow further shrinking when needed */
+    max-height: 60vh;
   }
 
   #read-more {
@@ -247,11 +269,6 @@
     font-weight: 700;
   }
 
-  @media (max-width: 992px) {
-    #overlay {
-      display: none;
-    }
-  }
 </style>
 
 <div id="body">
@@ -262,7 +279,7 @@
           <table>
             <tr>
               <td>
-                <img src="img/common/salvador.png" alt="Salvador Dali" />
+                <img src="img/common/salvador.png" alt="Salvador Dali" width="100" style="display:block;width:100px;max-width:100%;height:auto;" />
               </td>
               <td>
                 <h1>Salvadorium</h1>
@@ -277,11 +294,6 @@
           </p>
         </td>
         <td id="nav" rowspan="5">
-          <img
-            id="overlay"
-            src="img/common/persistence.png"
-            alt="clock overlay"
-          />
           <ul>
             <li id="active-page">
               <a href="index.html">
@@ -377,21 +389,21 @@
                   <a href="https://www.facebook.com/Salvadorium">
                     <img
                       class="social-icon"
-                      src="img/icons/facebook.svg"
+                      src="img/icons/facebook.png"
                       alt="facebook icon"
                     />
                   </a>
                   <a href="https://www.instagram.com/salvadorium/">
                     <img
                       class="social-icon"
-                      src="img/icons/instagram.svg"
+                      src="img/icons/instagram.png"
                       alt="instagram icon"
                     />
                   </a>
                   <a href="https://www.pinterest.com/salvadorium/">
                     <img
                       class="social-icon"
-                      src="img/icons/pinterest.svg"
+                      src="img/icons/pinterest.png"
                       alt="pinterest icon"
                     />
                   </a>
